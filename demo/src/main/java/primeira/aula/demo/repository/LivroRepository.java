@@ -10,8 +10,18 @@ import primeira.aula.demo.model.Livro;
 @Repository
 public interface LivroRepository extends JpaRepository<Livro, Long> {
 
-    public Livro findByTitulo(String titulo);
+    public List<Livro> findByTitulo(String titulo);
 
     public List<Livro> findByGenero(String genero);
-    
+
+    public List<Livro> findByPaginas(Integer paginas);
+
+    public boolean existsByTitulo(String titulo);
+
+    public boolean existsByPagina(String pagina);
+
+    public void deleteByTiTle(String titulo);
+
+    public void deleteByPagina(String pagina);
+
 }

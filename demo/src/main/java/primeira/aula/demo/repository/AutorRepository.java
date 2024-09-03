@@ -14,6 +14,8 @@ public interface AutorRepository extends JpaRepository<Autor, Long> {
     public Autor findByCpf(String cpf);
     
     public List<Autor> findByIdade(Short idade);
+
+    public List<Autor> findByNome(String nome);
     
     public void deleteByCpf(String cpf);
 
