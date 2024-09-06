@@ -3,18 +3,20 @@ package primeira.aula.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import primeira.aula.demo.exception.InvalidLivroException;
 import primeira.aula.demo.model.Livro;
 import primeira.aula.demo.service.LivroService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController 
 @RequestMapping(value = "/api/livro")
@@ -41,7 +43,7 @@ public class LivroController{
         }
     }
 
-    @GetMapping("/paginas/{pagina}")
+    @GetMapping("/paginas/{paginas}")
     public List<Livro> getByPaginasLivros(@PathVariable Integer paginas) {
         try {
             return livroService.getByPaginas(paginas);
@@ -79,7 +81,7 @@ public class LivroController{
         }
     }
 
-    @DeleteMapping("/delete/{titulo}")
+    @DeleteMapping("/delete/titulo/{titulo}")
     public void deleteByTitulo(@PathVariable String titulo) {
         try {
             livroService.deleteTitulo(titulo);
@@ -88,21 +90,24 @@ public class LivroController{
         }
     }
 
-    @DeleteMapping("/delete/{paginas}")
-    public void deleteByPaginas(@PathVariable String pagina){
+    @DeleteMapping("/delete/paginas/{paginas}")
+    public void deleteByPaginas(@PathVariable Integer paginas){
         try {
-            livroService.deletePaginas(pagina);
+            livroService.deletePaginas(paginas);
         } catch (InvalidLivroException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
     
-    @PutMapping("update/{id}")
-    public Livro updateLivro(@PathVariable Long id, Livro livroDetails){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateLivro(@PathVariable Long id, @RequestBody Livro livroDetails){
         try {
-            return livroService.updateLivroById(id, livroDetails);
+            Livro updatedLivro = livroService.updateLivroById(id, livroDetails);
+            return ResponseEntity.ok(updatedLivro);
         } catch (InvalidLivroException e) {
-            throw new RuntimeException(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado.");
         }
     }
 }

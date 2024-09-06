@@ -3,7 +3,10 @@ package primeira.aula.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import primeira.aula.demo.model.Livro;
 
@@ -18,10 +21,16 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 
     public boolean existsByTitulo(String titulo);
 
-    public boolean existsByPagina(String pagina);
+    public boolean existsByPaginas(Integer paginas);
 
-    public void deleteByTiTle(String titulo);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Livro l WHERE l.titulo = ?1")
+    public void deleteByTitulo(String titulo);
 
-    public void deleteByPagina(String pagina);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Livro l WHERE l.paginas = ?1")
+    public void deleteByPaginas(Integer paginas);
 
 }

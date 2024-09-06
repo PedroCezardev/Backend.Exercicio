@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import primeira.aula.demo.exception.InvalidAutorException;
+import primeira.aula.demo.exception.InvalidLivroException;
 import primeira.aula.demo.model.Autor;
 import primeira.aula.demo.repository.AutorRepository;
 
@@ -56,9 +57,15 @@ public class AutorService {
             throw new InvalidAutorException("O autor com este Id não foi encontrado no sistema.");
         }
         autorRepository.deleteById(id);
+        System.out.println("O autor foi deletado com sucesso!");
     }
 
     public Autor updateAutorById(Long id, Autor autorDetails) {
+
+        if (autorDetails == null) {
+            throw new InvalidLivroException("Os detalhes do Autor não podem ser nulos.");
+        }
+
         Optional<Autor> optionalAutor = autorRepository.findById(id);
         if (optionalAutor.isEmpty()) {
             throw new InvalidAutorException("Autor não encontrado com id: " + id);
@@ -76,11 +83,12 @@ public class AutorService {
 
     // Validações para verificar a integridade dos dados do Autor
     private void validateAutor(Autor autor) {
-        if ( autor.getNome().isEmpty() || autor.getNome().length() > 50 ) {
-            throw new InvalidAutorException("O nome do Autor não pode ser nulo, vazio ou ter mais de 50 caracteres");
+        if ( autor.getNome().isEmpty() || autor.getNome().length() > 50) {
+            throw new InvalidAutorException("O nome do Autor não pode ser nulo ou vazio");
         }
         if (autor.getIdade() == null || autor.getIdade() <= 0) {
             throw new InvalidAutorException("A idade do Autor deve ser maior que zero");
         }
     }
+    
 }

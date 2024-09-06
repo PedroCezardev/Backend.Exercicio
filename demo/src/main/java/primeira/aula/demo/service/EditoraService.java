@@ -3,6 +3,7 @@ package primeira.aula.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import primeira.aula.demo.exception.InvalidEditoraException;
@@ -12,6 +13,7 @@ import primeira.aula.demo.repository.EditoraRepository;
 @Service
 public class EditoraService {
 
+    @Autowired
     private EditoraRepository editoraRepository;
 
     public Editora insertEditora(Editora editora) {
@@ -47,6 +49,7 @@ public class EditoraService {
             throw new InvalidEditoraException("A editora com este Id não foi encontrado no sistema.");
         }
         editoraRepository.deleteById(id);
+        System.out.println("A Editora foi deletada com sucesso!");
     }
 
     public Editora updateEditoraById(Long id, Editora editoraDetails) {

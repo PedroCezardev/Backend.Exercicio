@@ -3,11 +3,13 @@ package primeira.aula.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,12 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import primeira.aula.demo.exception.InvalidAutorException;
 import primeira.aula.demo.model.Autor;
 import primeira.aula.demo.service.AutorService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
-@RestController 
+@RestController                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 @RequestMapping(value = "/api/autor")
-public class AutorController{
+public class AutorController{                                                                                                                                                                               
     
     // importando autorservice
     @Autowired
@@ -79,7 +80,7 @@ public class AutorController{
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteAutor(@PathVariable Long id){
         try {
             autorService.deleteById(id); 
@@ -89,11 +90,14 @@ public class AutorController{
     }
 
     @PutMapping("/update/{id}")
-    public Autor updateAutor(@PathVariable Long id, Autor autorDetails) {
+    public ResponseEntity<?> updateAutor(@PathVariable Long id, @RequestBody Autor autorDetails){
         try {
-            return autorService.updateAutorById(id, autorDetails);
+            Autor updatedAutor = autorService.updateAutorById(id, autorDetails);
+            return ResponseEntity.ok(updatedAutor);
         } catch (InvalidAutorException e) {
-            throw new RuntimeException(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado.");
         }
     }
  

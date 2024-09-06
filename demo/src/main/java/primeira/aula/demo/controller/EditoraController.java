@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import primeira.aula.demo.exception.InvalidEditoraException;
 import primeira.aula.demo.model.Editora;
 import primeira.aula.demo.service.EditoraService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController 
-@RequestMapping(value = "/api/livro")
+@RequestMapping(value = "/api/editora")
 public class EditoraController{
 
     @Autowired
@@ -42,7 +42,7 @@ public class EditoraController{
         }
     }
 
-    @GetMapping("/cnpj/{cpnj}")
+    @GetMapping("/cnpj/{cnpj}")
     public Editora getCnpj(@PathVariable String cnpj){
         try {
             return editoraService.getByCnpj(cnpj);
@@ -51,7 +51,7 @@ public class EditoraController{
         }
     }
 
-    @GetMapping("/nome{nome}")
+    @GetMapping("/nome/{nome}")
     public List<Editora> buscarPeloNome(@PathVariable String nome){
         try {
             return editoraService.getByName(nome);
@@ -61,7 +61,7 @@ public class EditoraController{
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteEditora(Long id){
+    public void deleteEditora(@PathVariable Long id){
         try {
             editoraService.deleteById(id);
         } catch (InvalidEditoraException e) {
